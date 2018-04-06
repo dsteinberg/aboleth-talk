@@ -1,0 +1,101 @@
+\documentclass[lualatex, aspectratio=169]{beamer}
+
+\usetheme{Data61}
+
+\title{Data Representations}
+\subtitle{Text, Categories, Time Series...}
+\author{Lachlan McCalman}
+\institute{Inference Systems Engineering}
+
+\usepackage{fontspec}
+\usepackage{unicode-math}
+\usefonttheme{serif}
+
+\defaultfontfeatures{Ligatures=TeX}
+\setmainfont{EB Garamond}
+\setsansfont{Open Sans}
+\setmonofont{Source Serif Pro}
+\setmathfont{Asana Math}
+
+\input{commands.tex}
+
+
+
+# https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/ 
+# https://blog.statsbot.co/time-series-prediction-using-recurrent-neural-networks-lstms-807fa6ca7f
+# https://machinelearningmastery.com/promise-recurrent-neural-networks-time-series-forecasting/
+# https://en.wikipedia.org/wiki/Dynamic_time_warping
+
+
+
+
+
+\begin{document}
+
+\maketitle
+
+\begin{frame}{Similarity}
+  \begin{itemize}
+    \item Machine learning: Given $\{\v{X_i}, Y_i\}_{i=1}^{N}$ and $\v{X}^*$, what is $Y^*$? \\
+    \item Roughly, we \emph{interpolate}: Find $\v{X}_j$ near $\v{X}^*$, then $Y^*$ is near $Y_j$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Nearest Neighbour}
+  \begin{tikzpicture}[remember picture, overlay]
+            \node[at=(current page.center)] {
+  \includegraphics[page=1, width=\pagewidth]{assets/pictures.pdf}
+            };
+\end{tikzpicture}
+\end{frame}
+
+\begin{frame}{Parametric Model}
+  \begin{tikzpicture}[remember picture, overlay]
+            \node[at=(current page.center)] {
+  \includegraphics[page=2, width=\pagewidth]{assets/pictures.pdf}
+            };
+\end{tikzpicture}
+\end{frame}
+
+
+\begin{frame}{What is similar?}
+  \begin{itemize}
+    \item But what does \alert{near} mean??
+    \item We usually need some \emph{distance} function $d(\cdot, \cdot)$
+    \item Different distance measures, different answers!
+    \item And what if our features aren't numbers: $d(\textrm{``Apple''}, \textrm{``Pear''}) = ??$
+  \end{itemize}
+\end{frame}
+
+\begin{frame}{Smooth}
+  \begin{align*}
+    \textrm{Given} \{X_i, Y_i\}_{i=1}^N 
+  \end{align*}
+\end{frame}
+
+
+\begin{frame}{Difference and Similarity}
+  \begin{align*}
+    d((0.1, 0.3), (-0.3, 0.5)) &= \sqrt{(0.1 + 0.3)^2 + (0.3 - 0.5)^2} \\
+    d(\textrm{``Apple''}, \textrm{``Pear''}) &= ??
+  \end{align*}
+\end{frame}
+
+\begin{frame}{Second slide}
+  \begin{enumerate}
+    \item first
+    \item second
+    \item third
+    \begin{enumerate}
+      \item \alert{alert} 
+      \item \structure{structure}
+			\begin{enumerate}
+				\item third $\Gamma\Delta\gamma$
+				\item second third
+			\end{enumerate}
+    \end{enumerate}
+  \end{enumerate}
+\end{frame}
+
+
+\end{document}

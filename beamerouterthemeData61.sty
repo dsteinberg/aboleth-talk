@@ -1,0 +1,41 @@
+% Copyright 2018 Data61
+% Date 2018-03-23
+% Version 2, revision 1
+% author: Lachlan McCalman, lachlan.mccalman@data61.csiro.au
+
+\ProvidesPackage{beamerouterthemeData61}
+
+\setbeamertemplate{navigation symbols}{}
+\setbeamertemplate{headline}{}
+\setbeamertemplate{logo}{}
+\setbeamertemplate{sidebar right}{}
+
+\setbeamertemplate{background canvas}{
+\begin{tikzpicture}[remember picture,overlay]
+            \node[at=(current page.center)] {
+                \includegraphics[width=\paperwidth]{assets/slide.pdf}
+            };
+        \end{tikzpicture}
+}
+
+\setbeamertemplate{footline}{%
+  \begin{beamercolorbox}[ht=3\baselineskip,leftskip=.5cm]{footline}
+    \raisebox{1.2\baselineskip}{%
+      \insertframenumber\ $\vert$ \insertshorttitle\ $\vert$ \insertshortauthor}
+  \end{beamercolorbox}
+}
+
+\newlength{\frametitlelength}
+\setlength{\frametitlelength}{\paperwidth - 96pt -.5cm}
+\setbeamertemplate{frametitle}{%
+  \vskip8pt
+  \begin{beamercolorbox}[wd=\frametitlelength,left,leftskip=-5mm]{frametitle}
+   \bfseries\LARGE\insertframetitle 
+  \end{beamercolorbox}
+}
+
+\setbeamertemplate{title page}{%
+  \begin{beamercolorbox}[wd=\paperwidth,ht=\paperheight]{title page}
+    \inserttitlegraphic
+  \end{beamercolorbox}
+}

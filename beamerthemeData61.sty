@@ -1,0 +1,31 @@
+\ProvidesPackage{beamerthemeData61}
+
+\usepackage{tikz}
+\usepackage{calc}
+
+\titlegraphic{
+\begin{tikzpicture}[remember picture,overlay]
+            \node[at=(current page.center)] {
+                \includegraphics[width=\paperwidth]{assets/title.pdf}
+            };
+          \node[xshift=0.5cm,yshift=-0.8cm, at=(current page.west), anchor=west, text width=10cm] {
+            \huge\bfseries\inserttitle 
+            };
+          \node[xshift=0.5cm,yshift=-1.5cm, at=(current page.west), anchor=west, text width=10cm] {
+            \large\bfseries\insertsubtitle
+            };
+          \node[xshift=0.5cm,yshift=-2.7cm, at=(current page.west), anchor=west, text width=10cm] {
+            \small\bfseries\insertauthor \, | \insertinstitute
+            };
+          \node[xshift=0.5cm,yshift=-3.2cm, at=(current page.west), anchor=west, text width=10cm] {
+            \small\insertdate
+            };
+        \end{tikzpicture}
+}
+
+\usecolortheme{Data61}
+% \usefonttheme{Data61}
+\useinnertheme{Data61}
+\useoutertheme{Data61}
+
+\renewcommand{\maketitle}{\frame[plain]{\titlepage}}

@@ -1,0 +1,46 @@
+\renewcommand{\v}[1]{\mathbf{#1}}
+\renewcommand{\d}{\,\mathrm{d}}
+\newcommand{\vp}[1]{\mathbf{#1}^{\prime}}
+\newcommand{\h}[1]{\hat{#1}}
+\newcommand{\cov}[2]{\mathrm{Cov}(#1,#2)}
+\newcommand{\hil}{\mathscr{H}}
+\newcommand{\reals}{\mathbb{R}}
+\newcommand{\complexs}{\mathbb{C}}
+\newcommand{\dprod}[2]{{\langle #1, #2 \rangle}}
+\newcommand{\expec}[1]{\mathrm{E}\left[#1\right]}
+\newcommand{\argmin}{\operatornamewithlimits{argmin}}
+\newcommand{\pd}[2]{\frac{\partial#1}{\partial#2}}
+\newcommand{\norm}[1]{\|#1\|}
+
+%%%%%%%%%%%%%%%%%%%%%%%
+% global renew commands
+%%%%%%%%%%%%%%%%%%%%%%%
+\makeatletter
+\def\gnewcommand{\g@star@or@long\new@command}
+\def\grenewcommand{\g@star@or@long\renew@command}
+\def\g@star@or@long#1{% 
+  \@ifstar{\let\l@ngrel@x\global#1}{\def\l@ngrel@x{\long\global}#1}}
+\makeatother
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+% end global renew commands
+%%%%%%%%%%%%%%%%%%%%%%%%%%%
+
+\let\oldint\int
+\grenewcommand\int{\oldint\!}
+\grenewcommand{\epsilon}{\varepsilon}
+
+\let\oldemptyset\emptyset
+\let\emptyset\varnothing
+
+\newtheorem{prp}{Proposition}[section]
+\newtheorem{thm}{Theorem}[section]
+
+\theoremstyle{definition}
+\newtheorem{dfn}{Definition}[section]
+
+\newcommand{\sidenote}[1]{
+  \marginline{{\fontsize{8}{8}\selectfont
+    \begin{spacing}{1}
+#1
+    \end{spacing} }}
+}
