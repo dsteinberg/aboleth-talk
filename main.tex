@@ -2,100 +2,121 @@
 
 \usetheme{Data61}
 
-\title{Data Representations}
-\subtitle{Text, Categories, Time Series...}
-\author{Lachlan McCalman}
+\title{Aboleth}
+\subtitle{Bayesian Neural Networks and More}
+\author{Dan Steinberg}
+\date{April 11, 2018}
 \institute{Inference Systems Engineering}
 
 \usepackage{fontspec}
+\usepackage{color}
 \usepackage{unicode-math}
 \usefonttheme{serif}
 
 \defaultfontfeatures{Ligatures=TeX}
-\setmainfont{EB Garamond}
+\setmainfont{Open Sans}
 \setsansfont{Open Sans}
-\setmonofont{Source Serif Pro}
-\setmathfont{Asana Math}
+\setmonofont{Inconsolata}
+% \setmathfont{DejaVu Math Tex Gyre}
+% \setmathfont{XITS Math}
 
 \input{commands.tex}
-
-
-
-# https://machinelearningmastery.com/time-series-prediction-lstm-recurrent-neural-networks-python-keras/ 
-# https://blog.statsbot.co/time-series-prediction-using-recurrent-neural-networks-lstms-807fa6ca7f
-# https://machinelearningmastery.com/promise-recurrent-neural-networks-time-series-forecasting/
-# https://en.wikipedia.org/wiki/Dynamic_time_warping
-
-
-
 
 
 \begin{document}
 
 \maketitle
 
-\begin{frame}{Similarity}
+\begin{frame}{Outline}
   \begin{itemize}
-    \item Machine learning: Given $\{\v{X_i}, Y_i\}_{i=1}^{N}$ and $\v{X}^*$, what is $Y^*$? \\
-    \item Roughly, we \emph{interpolate}: Find $\v{X}_j$ near $\v{X}^*$, then $Y^*$ is near $Y_j$
+    \item Supervised learning
+    \item ...
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Nearest Neighbour}
-  \begin{tikzpicture}[remember picture, overlay]
-            \node[at=(current page.center)] {
-  \includegraphics[page=1, width=\pagewidth]{assets/pictures.pdf}
-            };
-\end{tikzpicture}
-\end{frame}
-
-\begin{frame}{Parametric Model}
-  \begin{tikzpicture}[remember picture, overlay]
-            \node[at=(current page.center)] {
-  \includegraphics[page=2, width=\pagewidth]{assets/pictures.pdf}
-            };
-\end{tikzpicture}
-\end{frame}
+\section{Supervised learning and Neural Nets}
 
 
-\begin{frame}{What is similar?}
+\begin{frame}{Supervised learning}
   \begin{itemize}
-    \item But what does \alert{near} mean??
-    \item We usually need some \emph{distance} function $d(\cdot, \cdot)$
-    \item Different distance measures, different answers!
-    \item And what if our features aren't numbers: $d(\textrm{``Apple''}, \textrm{``Pear''}) = ??$
+    \item <1-> $\v{x}$ is a vector of covariates, $y$ a target 
+    \item <2-> There exists an unknown function, $f$, that maps the covariates to the targets,
+      \begin{align*}
+        y = f(\v{x}) + \epsilon
+      \end{align*}
+    \item <3-> \emph{Supervised ML}: learn an approximation of this function, $h$, using examples,
+      \begin{align*}
+        y_i \approx h(\v{x}_i) \quad \text{for all} \quad \{(y_1, \v{x}_1), (y_2, \v{x}_2), \ldots,
+          (y_N, \v{x}_N) \}
+      \end{align*}
   \end{itemize}
 \end{frame}
 
-\begin{frame}{Smooth}
+
+\begin{frame}{Supervised learning}
+  Usually we parameterise $h$ by $\theta$, and learning is often \imp{optimisation} of these parameters,
   \begin{align*}
-    \textrm{Given} \{X_i, Y_i\}_{i=1}^N 
+    \hat{\theta} = \argmin_\theta \frac{1}{N} \sum^N_{i=1} \mathcal{L}\!\left(y_i, h(\v{x}_i, \theta)\right),
   \end{align*}
+  where $\mathcal{L}$ is a \imp{loss} or \imp{error} function.
+  % For example, linear regression,
+  % \begin{align*}
+  %   \argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - \v{w}^\top \v{x}_i \|^2_2
+  % \end{align*}
+
 \end{frame}
 
 
-\begin{frame}{Difference and Similarity}
+\begin{frame}{Prediction}
+  Once we have learned $h$, we want to use it to \imp{predict} $\query{y}$ for \imp{new}, \imp{unseen} instances of $\query{\v{x}}$,
   \begin{align*}
-    d((0.1, 0.3), (-0.3, 0.5)) &= \sqrt{(0.1 + 0.3)^2 + (0.3 - 0.5)^2} \\
-    d(\textrm{``Apple''}, \textrm{``Pear''}) &= ??
+    \expec{\query{y}} = h(\query{\v{x}}, \hat{\theta}).
   \end{align*}
+  with as little \imp{error} as possible --- we want $h$ to \imp{generalise} from example!
 \end{frame}
 
-\begin{frame}{Second slide}
-  \begin{enumerate}
-    \item first
-    \item second
-    \item third
-    \begin{enumerate}
-      \item \alert{alert} 
-      \item \structure{structure}
-			\begin{enumerate}
-				\item third $\Gamma\Delta\gamma$
-				\item second third
-			\end{enumerate}
-    \end{enumerate}
-  \end{enumerate}
+
+\begin{frame}{Regression Example}
+
+  \begin{description}
+    \item[True function] $f(x) = \sin(x)$
+    \item[Observations] $y_i = f(x_i) + \epsilon_i, \quad \epsilon_i \sim \mathcal{N}(0, 0.1)$
+  \end{description}
+
+  \begin{figure}
+    \includegraphics[width=0.5\pagewidth]{assets/regress.png}
+  \end{figure}
+
 \end{frame}
+
+
+\begin{frame}{Regression Example}
+
+  \begin{description}
+    \item<1>[Model] $h(x) = w_0 + w_1 x$
+    \item<2>[Model] $h(x) = w_0 + w_1 x + w_2 x^2 + w_3 x^3$
+    \item<3>[Model] $h(x) = w_0 + w_1 x + \ldots + w_9 x^9$
+    \item[Objective] $\argmin_{w} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i)\|^2_2$ 
+  \end{description}
+
+  \begin{figure}
+    \begin{overprint}%
+      \onslide<1>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly1.png}}
+      \onslide<2>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly3.png}}
+      \onslide<3>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly9.png}}
+    \end{overprint}
+  \end{figure}
+
+\end{frame}
+
+
+% \begin{frame}{Nearest Neighbour}
+%   \begin{tikzpicture}[remember picture, overlay]
+%             \node[at=(current page.center)] {
+%   \includegraphics[page=1, width=\pagewidth]{assets/pictures.pdf}
+%             };
+% \end{tikzpicture}
+% \end{frame}
 
 
 \end{document}

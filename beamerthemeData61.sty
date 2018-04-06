@@ -29,3 +29,17 @@
 \useoutertheme{Data61}
 
 \renewcommand{\maketitle}{\frame[plain]{\titlepage}}
+
+% Section slide
+\AtBeginSection[]{%
+  \begin{frame}[plain]
+    \begin{tikzpicture}[remember picture,overlay]
+      \node[at=(current page.center)] {%
+        \includegraphics[width=\paperwidth]{assets/section.pdf}
+      };
+      \node[xshift=0.5cm,yshift=-0.8cm, at=(current page.west), anchor=west, text width=10cm] {%
+        \huge\bfseries\insertsectionhead 
+      };
+    \end{tikzpicture}
+  \end{frame}
+}
