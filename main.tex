@@ -34,12 +34,13 @@
   \end{itemize}
 \end{frame}
 
-\section{Supervised learning and Neural Nets}
+
+\section{Supervised Learning \\ to Bayesian NNs}
 
 
 \begin{frame}{Supervised learning}
   \begin{itemize}
-    \item <1-> $\v{x}$ is a vector of covariates, $y$ a target 
+    \item <1-> $\v{x}$ is a vector of covariates or features, $y$ a target 
     \item <2-> There exists an unknown function, $f$, that maps the covariates to the targets,
       \begin{align*}
         y = f(\v{x}) + \epsilon
@@ -76,7 +77,7 @@
 \end{frame}
 
 
-\begin{frame}{Regression Example}
+\begin{frame}{Regression example}
 
   \begin{description}
     \item[True function] $f(x) = \sin(x)$
@@ -90,33 +91,206 @@
 \end{frame}
 
 
-\begin{frame}{Regression Example}
+% \begin{frame}{Fit a line}
+
+%   \begin{description}
+%     \item[Model] $h(x) = w_0 + w_1 x$
+%     \item[Objective] $\argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i)\|^2_2$ 
+%   \end{description}
+
+%   \begin{figure}
+%     \includegraphics[width=0.5\pagewidth]{assets/poly1.png}
+%   \end{figure}
+
+%   Under-fitting --- bad generalisation/interpolation.
+
+% \end{frame}
+
+
+\begin{frame}{Fit a degree-3 polynomial}
 
   \begin{description}
-    \item<1>[Model] $h(x) = w_0 + w_1 x$
-    \item<2>[Model] $h(x) = w_0 + w_1 x + w_2 x^2 + w_3 x^3$
-    \item<3>[Model] $h(x) = w_0 + w_1 x + \ldots + w_9 x^9$
-    \item[Objective] $\argmin_{w} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i)\|^2_2$ 
+    \item[Model] $h(x, \v{w}) = w_0 + w_1 x + w_2 x^2 + w_3 x^3$
+    \item[Objective] $\argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i, \v{w})\|^2_2$ 
   \end{description}
 
   \begin{figure}
-    \begin{overprint}%
-      \onslide<1>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly1.png}}
-      \onslide<2>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly3.png}}
-      \onslide<3>\centerline{\includegraphics[width=0.5\pagewidth]{assets/poly9.png}}
-    \end{overprint}
+    \includegraphics[width=0.5\pagewidth]{assets/poly3.png}
+  \end{figure}
+
+  Good fit --- good interpolation.
+
+\end{frame}
+
+
+\begin{frame}{Linear Models}
+
+  So we saw a polynomial is one class of model, e.g.:
+  \begin{align*}
+    h(x, \v{w}) &= w_0 + w_1 x + w_2 x^2 + w_3 x^3 \\
+                &= \begin{bmatrix} w_0 & w_1 & w_2 & w_3 \end{bmatrix}
+                   \begin{bmatrix} 1 \\ x \\ x^2 \\ x^3 \end{bmatrix} \\
+                   &= \v{w}\T \text{Poly}_3(x)
+  \end{align*}
+  This is part of a general class of models we call \imp{linear} models,
+  \begin{align*}
+    h(\v{x}, \v{w}) &= \v{w}\T \phi(\v{x})
+  \end{align*}
+  where $\phi$ is some function.
+
+\end{frame}
+
+
+\begin{frame}{Neural Nets}
+  
+  Neural nets generalise this class of linear models with \imp{non-linearities} ($\sigma$) and \imp{function composition}:
+  \begin{itemize}
+    \item 0 hidden layers: $\text{NN}_0(\v{x}) = \sigma_0( \v{W}_0\v{x} )$
+    \item 1 hidden layer: $\text{NN}_1(\v{x}) = \sigma_1(\v{W}_1 \sigma_0( \v{W}_0 \v{x} ))$
+    \item L hidden layers: $\text{NN}_L(\v{x}) = \sigma_L(\v{W}_L \sigma_{L-1}(\v{W}_{L-1} \ldots \sigma( \v{W}_0 \v{x} )))$
+  \end{itemize}
+
+  \begin{figure}
+    \includegraphics[page=1, trim={3cm 4.5cm 3.5cm 4.5cm}, clip, width=0.5\pagewidth]{assets/pictures.pdf}
+  \end{figure}
+  
+\end{frame}
+
+
+\begin{frame}{Why this representation?}
+
+  \begin{itemize}
+    \item Neural nets can represent any function!
+    \item For a given depth, the more complex the function, the `wider' the layers have to be.
+    \item Or we can use (exponentially) `narrower' and deeper nets!
+  \end{itemize}
+
+  Nice demo: \href{https://playground.tensorflow.org}{TensorFlow Playground}
+  \begin{figure}
+    \includegraphics[width=0.2\pagewidth]{assets/swirl.png}
+  \end{figure}
+
+
+\end{frame}
+
+
+\begin{frame}{TensorFlow Playground --- Spiral}
+
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.75\pageheight]{assets/0-hidden.png}
   \end{figure}
 
 \end{frame}
 
 
-% \begin{frame}{Nearest Neighbour}
-%   \begin{tikzpicture}[remember picture, overlay]
-%             \node[at=(current page.center)] {
-%   \includegraphics[page=1, width=\pagewidth]{assets/pictures.pdf}
-%             };
-% \end{tikzpicture}
+\begin{frame}{TensorFlow Playground --- Spiral}
+
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.75\pageheight]{assets/1-hidden.png}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{TensorFlow Playground --- Spiral}
+
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.75\pageheight]{assets/2-hidden.png}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{TensorFlow Playground --- Spiral}
+
+  \begin{figure}
+    \centering
+    \includegraphics[height=0.75\pageheight]{assets/3-hidden.png}
+  \end{figure}
+
+\end{frame}
+
+
+\begin{frame}{Neural Nets and Abstraction}
+
+  \begin{figure}
+    \includegraphics[width=0.7\pagewidth]{assets/abstraction.png}
+    \caption{https://www.rsipvision.com/exploring-deep-learning/}
+  \end{figure}
+
+\end{frame}
+
+% \begin{frame}{Fit a Degree-9 Polynomial}
+
+%   \begin{description}
+%     \item[Model] $h(x) = w_0 + w_1 x + \ldots + w_9 x^9$
+%     \item[Objective] $\argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i)\|^2_2$ 
+%   \end{description}
+
+%   \begin{figure}
+%     \includegraphics[width=0.5\pagewidth]{assets/poly9.png}
+%   \end{figure}
+
+%   Over fitting --- fits points exactly, but bad for interpolation.
 % \end{frame}
+
+
+% \begin{frame}{Regularisation}
+%   TODO: why regularisation is important
+
+%   TODO: what the learning objective looks like with regularisation
+% \end{frame}
+
+
+\begin{frame}{Probabilistic Prediction}
+  TODO: We don't want just the expected value $\expec{\query{y} | \query{\v{x}}, \theta}$, but the predictive density, $p(\query{y} | \query{\v{x}}, \theta)$
+
+
+  This still gives us an objective that is decomposable into data-fitting and regularisation...
+\end{frame}
+
+
+\begin{frame}{Bayesian Neural Nets}
+
+  Probabilistic/Bayesian Neural networks
+
+  Have to pass samples of the parameters through the network
+
+  This is something that many existing frameworks do not do ... and it is something that has
+  to be build into the graph!
+
+\end{frame}
+
+
+\section{Aboleth --- Features and design}
+
+
+\begin{frame}{Features}
+  TODO
+\end{frame}
+
+
+\begin{frame}{Why do we need another NN framework?}
+
+  Why TensorFlow (and not PyTorch, Theano, MXNet)
+
+  Why Not Keras, TensorFlow.learn, Edward, Zhusuan
+
+\end{frame}
+
+
+\begin{frame}{Design}
+  TODO
+\end{frame}
+
+
+\begin{frame}{Applications}
+  TODO  
+\end{frame}
+
 
 
 \end{document}
