@@ -66,15 +66,20 @@
 
 
 \begin{frame}{Supervised learning}
-  Usually we parameterise $h$ by $\theta$, and learning is often \imp{optimisation} of these parameters,
+  Usually give $h$ parameters, $\theta$, and learning is \imp{optimisation} of these parameters,
   \begin{align*}
     \hat{\theta} = \argmin_\theta \frac{1}{N} \sum^N_{i=1} \mathcal{L}\!\left(y_i, h(\v{x}_i, \theta)\right),
   \end{align*}
   where $\mathcal{L}$ is a \imp{loss} or \imp{error} function.
-  % For example, linear regression,
-  % \begin{align*}
-  %   \argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - \v{w}^\top \v{x}_i \|^2_2
-  % \end{align*}
+
+  \pause
+  
+  \hspace{1cm}
+
+  For example, minimise the sum of squared errors
+  \begin{align*}
+    \argmin_{\theta} \frac{1}{N} \sum^N_{i=1} (y_i - h(\v{x}_i, \theta))^2
+  \end{align*}
 
 \end{frame}
 
@@ -84,7 +89,6 @@
   \begin{align*}
     \expec{\query{y}} = h(\query{\v{x}}, \hat{\theta}).
   \end{align*}
-  with as little \imp{error} as possible --- we want $h$ to \imp{generalise} from example!
 \end{frame}
 
 
@@ -96,7 +100,7 @@
   \end{description}
 
   \begin{figure}
-    \includegraphics[width=0.5\pagewidth]{assets/regress.png}
+    \includegraphics[width=0.6\pagewidth]{assets/regress.png}
   \end{figure}
 
 \end{frame}
@@ -122,14 +126,12 @@
 
   \begin{description}
     \item[Model] $h(x, \v{w}) = w_0 + w_1 x + w_2 x^2 + w_3 x^3$
-    \item[Objective] $\argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} \|y_i - h(x_i, \v{w})\|^2_2$ 
+    \item[Objective] $\argmin_{\v{w}} \frac{1}{N} \sum^N_{i=1} (y_i - h(x_i, \v{w}) )^2$ 
   \end{description}
 
   \begin{figure}
-    \includegraphics[width=0.5\pagewidth]{assets/poly3.png}
+    \includegraphics[width=0.6\pagewidth]{assets/poly3.png}
   \end{figure}
-
-  Good fit --- good interpolation.
 
 \end{frame}
 
@@ -280,8 +282,9 @@
 
   Here is the same $\sin$ function fit using a probabilistic predictor (GP):
   \begin{figure}
-    \includegraphics[width=0.7\pagewidth]{assets/probabilistic.png}
+    \includegraphics[width=0.6\pagewidth]{assets/probabilistic.png}
   \end{figure}
+  Note where there isn't much data, uncertainty grows \ldots
 
 \end{frame}
 
@@ -293,7 +296,7 @@
     Great for decision making, e.g.
     \begin{itemize}
       \item Don't use this prediction because the model is uncertain --- good when predicting something about people, or if the action based on the prediction is expensive.
-      \item Sampling has a cost, so where should I sample next to make the model more confident? Active learning, Bayesian optimisation, experimental design.
+      \item Getting more data --- where should I sample next to make the model more confident? Active learning, Bayesian optimisation, experimental design.
     \end{itemize}
     \column{0.4\pagewidth}
     \begin{figure}
@@ -311,7 +314,8 @@
     \includegraphics[page=3, trim={3cm 4.5cm 3cm 4.5cm}, clip, width=0.6\pagewidth]{assets/pictures.pdf}
   \end{figure}
 
-  Bayesian NNs need \imp{random samples of their weights} to be propagated through the network. This has to be \imp{built into the computational graph}.
+  Bayesian NNs need \imp{random samples of their weights} to be propagated through the network. 
+  % This has to be \imp{built into the computational graph}.
 
 \end{frame}
 
@@ -319,29 +323,28 @@
 \begin{frame}{Bayesian Neural Nets}
 
   \begin{columns}
-    \column{0.3\pagewidth}
-    These samples have to be built into the graph since the \imp{learning objective} is part of the graph.
+    \column{0.35\pagewidth}
+    Learning involves \imp{function composition} (evaluating the NN), and \imp{accumulation} (weight regularisation). 
 
     \hspace{1cm}
 
-    Learning involves function composition (evaluating the NN), and accumulation (weight regularisation). 
+    For a BNN, its samples have to be \imp{built into the computational graph} since they are part of the \imp{learning objective}.
 
     \hspace{1cm}
 
     This motivates the need for a specialised framework for BNNs.
 
-    \column{0.65\pagewidth}
+    \column{0.6\pagewidth}
     \begin{figure}
-      \includegraphics[page=2, trim={3cm 2.5cm 0cm 4.5cm}, clip, width=0.63\pagewidth]{assets/pictures.pdf}
-      \includegraphics[page=4, trim={3cm 2.5cm 0cm 4.5cm}, clip, width=0.63\pagewidth]{assets/pictures.pdf}
+      \includegraphics[page=2, trim={3cm 2.5cm 0cm 4.5cm}, clip, width=0.6\pagewidth]{assets/pictures.pdf}
+      \includegraphics[page=4, trim={3cm 2.5cm 0cm 4.5cm}, clip, width=0.6\pagewidth]{assets/pictures.pdf}
     \end{figure}
   \end{columns}
 
 \end{frame}
 
 
-\section{Aboleth --- Features \& Design}
-
+\section{Aboleth}
 
 \begin{frame}{Why do we need another NN framework?}
 
@@ -349,7 +352,7 @@
     \item \imp{TensorFlow, PyTorch, MXNet, \ldots} --- too low level (a lot of boiler-plate)
     \item \imp{Keras} --- not inherently Bayesian
     \item \imp{Edward, PyMC3} --- probabilistic programming, a bit too general
-    \item \imp{Zhusuan} --- Like Edward, but with less functionality and worse design
+    \item \imp{ZhuSuan} --- Like Edward, but with less functionality and worse design
   \end{itemize}
 
   \hspace{1cm}
@@ -361,8 +364,9 @@
 
 \begin{frame}{Aboleth Features}
   \begin{columns}
-    \column{0.6\pagewidth}
+    \column{0.7\pagewidth}
     \begin{itemize}
+      \item Built on TensorFlow (great for deployments, monitoring etc)
       \item Bayesian layers (Dense, convolutional, embedding)
       \item Simple interface, simple to extend/interoperate with underlying TensorFlow
       \item Large scale Gaussian process approximation
@@ -370,9 +374,9 @@
       \item Compatible with Keras
       \item \imp{Stochastic variational Bayes} inference (and regular SGD)
     \end{itemize}
-    \column{0.3\pagewidth}
+    \column{0.25\pagewidth}
     \begin{figure}
-      \includegraphics[width=0.3\pagewidth]{assets/aboleth.jpg}
+      \includegraphics[width=0.25\pagewidth]{assets/aboleth.jpg}
     \end{figure}
   \end{columns}
 \end{frame}
@@ -406,7 +410,7 @@
         h = tf.matmul(h, W_1)
         return tf.reshape(h, [-1])
 
-    y = Normal(loc=neural_network(x_data), scale=0.1)
+    y = Normal(loc=neural_network(x_train), scale=0.1)
 
   \end{minted}
 \end{frame}
@@ -495,13 +499,12 @@
     \item \texttt{>>} implements the NN \imp{function composition}, and \imp{regularisation accumulation}
     \begin{itemize}
       \item Tony has told us this is an instance of a \imp{writer monad}
-      \item Each layer returns its computation, and appends its complexity penalty
+      \item Each layer composes itself with previous layers, and accumulates its complexity penalty
     \end{itemize}
     \item We don't need to know the shape of the input (unlike Keras), or the inputs to any layers, only the output shapes!
     \begin{itemize}
       \item the input shapes are lazily evaluated when data/placeholders are input
     \end{itemize}
-    \item We can easily control the number of samples (\texttt{n\_samples}, this can be a placeholder)
   \end{itemize}
 
 \end{frame}
@@ -530,7 +533,7 @@
 
   \begin{itemize}
     \item Usually you just need to subclass \texttt{Layer}, and implement \texttt{\_build, \_\_init\_\_}.
-    \item We also have \texttt{MultiLayers}, which take in key-word arguments (Tensors)
+    \item We also have \texttt{MultiLayers}, which take in key-word argument pairs
   \end{itemize}
 \end{frame}
 
