@@ -54,7 +54,7 @@
       \begin{align*}
         y = f(\v{x}) + \epsilon
       \end{align*}
-    \item <3> E.g. Houses have attributes, $\v{x}$ and market forces control prices $y$. 
+    \item <3> E.g. Houses have attributes, $\v{x}$, and market forces, $f$, control prices, $y$. 
     \item <4-> \emph{Supervised ML}: learn an approximation of this function, $h$, using examples,
       \begin{align*}
         y_i \approx h(\v{x}_i) \quad \text{for all} \quad \{(y_1, \v{x}_1), (y_2, \v{x}_2), \ldots,
@@ -66,20 +66,29 @@
 
 
 \begin{frame}{Supervised learning}
-  Usually give $h$ parameters, $\theta$, and learning is \imp{optimisation} of these parameters,
-  \begin{align*}
-    \hat{\theta} = \argmin_\theta \frac{1}{N} \sum^N_{i=1} \mathcal{L}\!\left(y_i, h(\v{x}_i, \theta)\right),
-  \end{align*}
-  where $\mathcal{L}$ is a \imp{loss} or \imp{error} function.
+  \begin{itemize}
+    \item Usually we choose a class of $h$ with parameters, $\theta$,
+    \item learning is \imp{optimisation} of these parameters.
+  \end{itemize}
+  % \begin{align*}
+  %   \hat{\theta} = \argmin_\theta \frac{1}{N} \sum^N_{i=1} \mathcal{L}\!\left(y_i, h(\v{x}_i, \theta)\right),
+  % \end{align*}
+  % where $\mathcal{L}$ is a \imp{loss} or \imp{error} function.
 
-  \pause
+  % \pause
   
-  \hspace{1cm}
-
-  For example, minimise the sum of squared errors
-  \begin{align*}
-    \argmin_{\theta} \frac{1}{N} \sum^N_{i=1} (y_i - h(\v{x}_i, \theta))^2
-  \end{align*}
+  % \hspace{1cm}
+  \begin{columns}
+    \column{0.51\pagewidth}
+    For example, find the $\theta$ that minimises the sum of squared errors
+    \begin{align*}
+      \hat\theta = \argmin_{\theta} \frac{1}{N} \sum^N_{i=1} (y_i - h(\v{x}_i, \theta))^2
+    \end{align*}
+    \column{0.3\pagewidth}
+    \begin{figure}
+      \includegraphics[width=0.3\pagewidth]{assets/gd.png}
+    \end{figure}
+  \end{columns}
 
 \end{frame}
 
@@ -172,10 +181,10 @@
 
 \begin{frame}{Why this representation?}
 
+  Neural nets can represent any function! But \ldots
   \begin{itemize}
-    \item Neural nets can represent any function!
-    \item For a given depth, the more complex the function, the `wider' the layers have to be.
-    \item Or we can use (exponentially) `narrower' and deeper nets!
+    \item The more complex the function, the `wider' the layers have to be (for a given depth).
+    \item Or we can use (exponentially) `narrower' and \imp{deeper} nets!
   \end{itemize}
 
   Nice demo: \href{https://playground.tensorflow.org}{TensorFlow Playground}
@@ -260,7 +269,7 @@
 
 \begin{frame}{Probabilistic Prediction}
 
-  Probabilistic predictors don't just estimate $\expec{\query{y}}$,
+  So far we've just looked at predictors that give us $\expec{\query{y} | h(\query{\v{x}}, \hat\theta)}$ --- don't explicitly model uncertainty.
 
   \begin{description}[\leftmargin=0cm]
     \item[Maximum Likelihood] methods:
@@ -280,11 +289,11 @@
 
 \begin{frame}{Probabilistic Prediction}
 
-  Here is the same $\sin$ function fit using a probabilistic predictor (GP):
+  Here is the same $\sin$ function fit using a Bayesian predictor (GP):
   \begin{figure}
     \includegraphics[width=0.6\pagewidth]{assets/probabilistic.png}
   \end{figure}
-  Note where there isn't much data, uncertainty grows \ldots
+  \imp{Note}: where there isn't much data, uncertainty grows \ldots
 
 \end{frame}
 
@@ -295,12 +304,13 @@
     \column{0.5\pagewidth}
     Great for decision making, e.g.
     \begin{itemize}
-      \item Don't use this prediction because the model is uncertain --- good when predicting something about people, or if the action based on the prediction is expensive.
-      \item Getting more data --- where should I sample next to make the model more confident? Active learning, Bayesian optimisation, experimental design.
+      \item \emph{Don't use this prediction because the model is uncertain} --- good when predicting something about people.
+      \item \emph{Getting more data} --- where should I sample next to make the model more confident?
     \end{itemize}
     \column{0.4\pagewidth}
     \begin{figure}
-      \includegraphics[width=0.4\pagewidth]{assets/bayesopt.png}
+      \includegraphics[width=0.36\pagewidth]{assets/bayesopt.png}
+      \caption{\href{https://towardsdatascience.com/shallow-understanding-on-bayesian-optimization-324b6c1f7083}{Bayesian optimisation}}.
     \end{figure}
   \end{columns}
 
@@ -314,7 +324,7 @@
     \includegraphics[page=3, trim={3cm 4.5cm 3cm 4.5cm}, clip, width=0.6\pagewidth]{assets/pictures.pdf}
   \end{figure}
 
-  Bayesian NNs need \imp{random samples of their weights} to be propagated through the network. 
+  Bayesian NNs propagate \imp{random samples of their weights} through the network, making a stochastic neural network. 
   % This has to be \imp{built into the computational graph}.
 
 \end{frame}
@@ -372,13 +382,14 @@
       \item Large scale Gaussian process approximation
       \item Multiple inputs: imputing layers, embedding layers etc
       \item Compatible with Keras
-      \item \imp{Stochastic variational Bayes} inference (and regular SGD)
+      \item \imp{Stochastic variational Bayes}$^1$ inference (and SGD)
     \end{itemize}
     \column{0.25\pagewidth}
     \begin{figure}
       \includegraphics[width=0.25\pagewidth]{assets/aboleth.jpg}
     \end{figure}
   \end{columns}
+  \tiny{$^1$Kingma, D. P. and Welling, M. Auto-encoding variational Bayes. In ICLR, 2014}
 \end{frame}
 
 
@@ -473,7 +484,7 @@
 
   # Construct the network, no data needed
   net = (
-    ab.InputLayer(name="X", n_samples=5) >>
+    ab.InputLayer(name="X", n_samples=5) >>   # how we assign data, and # samples 
     ab.DenseVariational(output_dim=20) >>
     ab.Activation(tf.tanh) >>
     ab.DenseVariational(output_dim=1)
@@ -629,6 +640,8 @@
   \imp{Thanks!}
 
   \hspace{2cm}
+
+  \emph{Contributors}: Dan Steinberg, Lachlan McCalman, Louis Tiao, Simon O'Callaghan, Alistair Reid
 
   \{daniel.steinberg, lachlan.mccalman\}@data61.csiro.au
 
